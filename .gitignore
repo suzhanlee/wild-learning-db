@@ -1,0 +1,105 @@
+# IDE - IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Claude Code
+.claude/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database
+*.sql
+*.sqlite
+*.db
+*.db-journal
+
+# Backup files
+*.bak
+*.backup
+*.old
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Build outputs
+target/
+build/
+dist/
+*.class
+*.jar
+*.war
+*.ear
+
+# Dependencies
+node_modules/
+vendor/
+.pnp.*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Personal notes (개인 학습 노트는 개별 관리)
+**/personal-notes.md
+**/my-notes.md
+
+# Practice scripts (실습 스크립트 - 필요시 개별 추가)
+practice/
+sandbox/
+
+# Data files (대용량 데이터 파일)
+*.csv
+*.tsv
+*.xlsx
+*.xls
+data/
+
+# Credentials (절대 커밋 금지!)
+credentials.json
+secrets.json
+*.pem
+*.key
+id_rsa
+id_rsa.pub
