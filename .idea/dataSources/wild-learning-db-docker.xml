@@ -1,11 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="Wild Learning DB (Docker)">
-  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.49">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.53">
     <root id="1">
+      <DefaultCasing>exact</DefaultCasing>
+      <DefaultEngine>InnoDB</DefaultEngine>
+      <DefaultTmpEngine>InnoDB</DefaultTmpEngine>
       <ServerVersion>9.5.0</ServerVersion>
     </root>
     <schema id="2" parent="1" name="wild_learning_db">
+      <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Current>1</Current>
+      <LastIntrospectionLevel>3</LastIntrospectionLevel>
+      <LastIntrospectionLocalTimestamp>2025-10-23.08:52:34</LastIntrospectionLocalTimestamp>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
+    <schema id="3" parent="1" name="mysql">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="4" parent="1" name="information_schema">
+      <CollationName>utf8mb3_general_ci</CollationName>
+    </schema>
+    <schema id="5" parent="1" name="performance_schema">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="6" parent="1" name="sys">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <routine id="7" parent="2" name="insert_dummy_users">
+      <Definer>root@%</Definer>
+      <DetailsLevel>3</DetailsLevel>
+      <RoutineKind>procedure</RoutineKind>
+      <SourceTextLength>553</SourceTextLength>
+    </routine>
+    <routine id="8" parent="2" name="insert_orders_batch">
+      <Definer>root@localhost</Definer>
+      <DetailsLevel>3</DetailsLevel>
+      <RoutineKind>procedure</RoutineKind>
+      <SourceTextLength>1305</SourceTextLength>
+    </routine>
+    <routine id="9" parent="2" name="insert_users_batch">
+      <Definer>root@localhost</Definer>
+      <DetailsLevel>3</DetailsLevel>
+      <RoutineKind>procedure</RoutineKind>
+      <SourceTextLength>1583</SourceTextLength>
+    </routine>
+    <table id="10" parent="2" name="users">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <argument id="11" parent="8" name="batch_size">
+      <Position>1</Position>
+      <StoredType>int|0s</StoredType>
+    </argument>
+    <argument id="12" parent="8" name="total_batches">
+      <Position>2</Position>
+      <StoredType>int|0s</StoredType>
+    </argument>
+    <argument id="13" parent="9" name="batch_size">
+      <Position>1</Position>
+      <StoredType>int|0s</StoredType>
+    </argument>
+    <argument id="14" parent="9" name="total_batches">
+      <Position>2</Position>
+      <StoredType>int|0s</StoredType>
+    </argument>
+    <column id="15" parent="10" name="id">
+      <AutoIncrement>1955</AutoIncrement>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>int|0s</StoredType>
+    </column>
+    <column id="16" parent="10" name="email">
+      <Position>2</Position>
+      <StoredType>varchar(255)|0s</StoredType>
+    </column>
+    <column id="17" parent="10" name="name">
+      <Position>3</Position>
+      <StoredType>varchar(100)|0s</StoredType>
+    </column>
+    <column id="18" parent="10" name="created_at">
+      <Position>4</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="19" parent="10" name="status">
+      <Position>5</Position>
+      <StoredType>varchar(20)|0s</StoredType>
+    </column>
+    <index id="20" parent="10" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="21" parent="10" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
   </database-model>
 </dataSource>
