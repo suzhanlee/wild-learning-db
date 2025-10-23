@@ -39,6 +39,7 @@ yarn-error.log*
 # Database
 *.sql
 !week*/**.sql
+!docker/mysql/initdb/**.sql
 *.sqlite
 *.db
 *.db-journal

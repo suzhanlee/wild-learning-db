@@ -12,11 +12,13 @@
 ### 1. B-Tree 인덱스 구조의 힘
 
 **개념**:
+
 - B-Tree는 균형 잡힌 트리 구조로 O(log N) 시간 복잡도를 보장
 - 100만 건의 데이터도 3-4번의 비교로 찾을 수 있음
 - Full Scan vs Index Scan의 차이가 수백 배
 
 **실습 결과**:
+
 ```
 인덱스 없음: ___ms (1,000,000 rows 검사)
 인덱스 있음: ___ms (1 row 검사)
@@ -24,6 +26,7 @@
 ```
 
 **핵심 인사이트**:
+
 - 데이터가 많을수록 인덱스의 효과가 극대화됨
 - WHERE, JOIN, ORDER BY 절에 자주 사용되는 컬럼은 반드시 인덱스 필요
 
@@ -32,28 +35,34 @@
 ### 2. 복합 인덱스 순서의 중요성
 
 **개념**:
+
 - 복합 인덱스는 왼쪽 컬럼부터 순차적으로 사용됨
 - 중간 컬럼을 건너뛰면 이후 컬럼은 인덱스를 사용하지 못함
 
 **올바른 순서 규칙**:
+
 1. **동등 조건(=)** 먼저
 2. **Cardinality 높은 것** 우선 (값이 다양한 컬럼)
 3. **ORDER BY 컬럼** 마지막
 
 **실습 예시**:
+
 ```sql
 -- 쿼리: WHERE user_id = ? AND status = ? ORDER BY created_at
 
 -- ❌ 잘못된 인덱스
-INDEX (status, user_id, created_at)
+INDEX
+    (status, user_id, created_at)
 
 -- ✅ 올바른 인덱스
-INDEX (user_id, status, created_at)
+    INDEX
+    (user_id, status, created_at)
 
-성능 차이: ___배
+    성능 차이: ___배
 ```
 
 **핵심 인사이트**:
+
 - 복합 인덱스 설계 시 쿼리의 WHERE 절과 ORDER BY 절을 함께 고려
 - Cardinality: user_id(100만) > status(5) 이므로 user_id를 앞에
 
@@ -63,20 +72,22 @@ INDEX (user_id, status, created_at)
 
 **반드시 피해야 할 패턴**:
 
-| 안티패턴 | 이유 | 개선 방법 |
-|---------|-----|---------|
-| `WHERE YEAR(created_at) = 2024` | 컬럼에 함수 적용 | `WHERE created_at >= '2024-01-01' AND created_at < '2025-01-01'` |
-| `WHERE email LIKE '%@gmail.com'` | 앞부분 와일드카드 | `WHERE email LIKE 'user@%'` 또는 Full-Text Search |
-| `WHERE status != 'cancelled'` | 부정 조건 | `WHERE status IN ('pending', 'completed', ...)` |
-| `WHERE id = '123'` | 타입 불일치 | `WHERE id = 123` |
+| 안티패턴                             | 이유        | 개선 방법                                                            |
+|----------------------------------|-----------|------------------------------------------------------------------|
+| `WHERE YEAR(created_at) = 2024`  | 컬럼에 함수 적용 | `WHERE created_at >= '2024-01-01' AND created_at < '2025-01-01'` |
+| `WHERE email LIKE '%@gmail.com'` | 앞부분 와일드카드 | `WHERE email LIKE 'user@%'` 또는 Full-Text Search                  |
+| `WHERE status != 'cancelled'`    | 부정 조건     | `WHERE status IN ('pending', 'completed', ...)`                  |
+| `WHERE id = '123'`               | 타입 불일치    | `WHERE id = 123`                                                 |
 
 **실습 결과**:
+
 ```
 함수 사용 시: ___ms (인덱스 미사용)
 범위 조건 사용: ___ms (인덱스 사용)
 ```
 
 **핵심 인사이트**:
+
 - WHERE 절에 함수를 사용하면 인덱스가 있어도 무용지물
 - 쿼리 작성 시 항상 인덱스 사용 가능 여부를 고려
 
@@ -89,10 +100,10 @@ INDEX (user_id, status, created_at)
 **테이블**: users (1,000,000 rows)
 **쿼리**: `SELECT * FROM users WHERE email = 'user500000@example.com'`
 
-| 상황 | 실행시간 | rows 검사 | type | key | 비고 |
-|------|---------|-----------|------|-----|------|
-| 인덱스 없음 |  | 1,000,000 | ALL | NULL | Full Table Scan |
-| 인덱스 있음 |  | 1 | ref | idx_email | Index Scan |
+| 상황     | 실행시간 | rows 검사   | type | key       | 비고              |
+|--------|------|-----------|------|-----------|-----------------|
+| 인덱스 없음 |      | 1,000,000 | ALL  | NULL      | Full Table Scan |
+| 인덱스 있음 |      | 1         | ref  | idx_email | Index Scan      |
 
 **배운 점**:
 -
@@ -104,11 +115,11 @@ INDEX (user_id, status, created_at)
 **테이블**: orders (1,000,000 rows)
 **쿼리**: `WHERE user_id = 12345 AND status = 'completed' ORDER BY created_at DESC LIMIT 10`
 
-| 인덱스 | 실행시간 | type | key | Extra |
-|--------|---------|------|-----|-------|
-| 없음 |  | ALL | NULL | Using where; Using filesort |
-| 잘못된 순서 (status, user_id, created_at) |  |  |  |  |
-| 올바른 순서 (user_id, status, created_at) |  | ref | idx_correct | Using where |
+| 인덱스                                  | 실행시간 | type | key         | Extra                       |
+|--------------------------------------|------|------|-------------|-----------------------------|
+| 없음                                   |      | ALL  | NULL        | Using where; Using filesort |
+| 잘못된 순서 (status, user_id, created_at) |      |      |             |                             |
+| 올바른 순서 (user_id, status, created_at) |      | ref  | idx_correct | Using where                 |
 
 **배운 점**:
 -
@@ -120,6 +131,7 @@ INDEX (user_id, status, created_at)
 **발견한 안티패턴**:
 
 #### 1.
+
 ```sql
 -- 문제 쿼리:
 
@@ -129,6 +141,7 @@ INDEX (user_id, status, created_at)
 ```
 
 #### 2.
+
 ```sql
 -- 문제 쿼리:
 
@@ -138,6 +151,7 @@ INDEX (user_id, status, created_at)
 ```
 
 #### 3.
+
 ```sql
 -- 문제 쿼리:
 
@@ -153,19 +167,19 @@ INDEX (user_id, status, created_at)
 ### 즉시 적용 가능한 것
 
 1. **주요 테이블 인덱스 검토**
-   - 대상 테이블:
-   - 확인 항목: WHERE 절에 자주 사용되는 컬럼
-   - 예상 효과:
+    - 대상 테이블:
+    - 확인 항목: WHERE 절에 자주 사용되는 컬럼
+    - 예상 효과:
 
 2. **느린 쿼리 개선**
-   - 대상 쿼리:
-   - 문제:
-   - 개선 방법:
-   - 예상 성능 향상:
+    - 대상 쿼리:
+    - 문제:
+    - 개선 방법:
+    - 예상 성능 향상:
 
 3. **안티패턴 제거**
-   - 발견한 안티패턴:
-   - 개선 계획:
+    - 발견한 안티패턴:
+    - 개선 계획:
 
 ---
 
@@ -182,14 +196,12 @@ INDEX (user_id, status, created_at)
 ## 🐛 트러블슈팅 경험
 
 ### 문제 1:
-**문제**:
 
+**문제**:
 
 **시도한 방법**:
 
-
 **해결**:
-
 
 **배운 점**:
 
@@ -197,14 +209,12 @@ INDEX (user_id, status, created_at)
 ---
 
 ### 문제 2:
-**문제**:
 
+**문제**:
 
 **시도한 방법**:
 
-
 **해결**:
-
 
 **배운 점**:
 
@@ -214,16 +224,19 @@ INDEX (user_id, status, created_at)
 ## 📊 성과 측정
 
 ### Before
+
 - 주요 쿼리 평균 실행 시간:
 - 인덱스 개수:
 - 안티패턴 쿼리 개수:
 
 ### After (예상)
+
 - 주요 쿼리 평균 실행 시간:
 - 최적화된 인덱스 개수:
 - 개선된 쿼리 개수:
 
 ### ROI 계산
+
 - 투자 시간: 60분
 - 예상 성능 개선: ___배
 - 예상 응답 시간 단축: ___ms
@@ -236,12 +249,14 @@ INDEX (user_id, status, created_at)
 ### Week 2: EXPLAIN 실전 분석 미리보기
 
 배울 내용:
+
 - EXPLAIN의 각 컬럼 의미
 - type 별 성능 차이
 - Extra 컬럼 해석
 - 실행 계획 최적화
 
 예습할 것:
+
 - [ ] EXPLAIN 기본 사용법
 - [ ] type 컬럼 종류 (ALL, index, range, ref, const)
 
@@ -250,18 +265,21 @@ INDEX (user_id, status, created_at)
 ## ✅ 체크리스트
 
 ### 이론 학습
+
 - [ ] B-Tree 구조 이해
 - [ ] 인덱스 생성 기준 숙지
 - [ ] 복합 인덱스 순서 규칙 이해
 - [ ] 안티패턴 패턴 암기
 
 ### 실습 완료
+
 - [ ] 인덱스 성능 비교 실험
 - [ ] 복합 인덱스 순서 테스트
 - [ ] 회사 코드 안티패턴 발견
 - [ ] 개선 쿼리 작성
 
 ### 실무 적용
+
 - [ ] 회사 주요 테이블 인덱스 검토
 - [ ] 느린 쿼리 1개 이상 개선
 - [ ] 팀원과 인덱스 전략 공유

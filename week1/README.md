@@ -19,7 +19,13 @@ week1/
 
 ### 사전 준비
 
-1. MySQL 8.0 이상 설치 확인
+**Option A: Docker 사용 (권장)** ⭐
+1. Docker Desktop 설치
+2. 프로젝트 루트에서 `scripts\start.bat` 실행
+3. 상세 가이드: [DOCKER_GUIDE.md](../DOCKER_GUIDE.md)
+
+**Option B: 로컬 MySQL 사용**
+1. MySQL 9.x 설치 확인
 2. MySQL 클라이언트 또는 워크벤치 실행
 3. 충분한 디스크 공간 확보 (최소 2GB)
 
@@ -27,6 +33,16 @@ week1/
 
 **목표**: 인덱스가 있을 때와 없을 때의 성능 차이를 직접 측정
 
+**Docker 사용 시**:
+```bash
+# MySQL 접속
+scripts\connect.bat
+
+# 또는 직접 접속
+docker exec -it wild-learning-mysql mysql -u root -pwild123!@# wild_learning_db
+```
+
+**로컬 MySQL 사용 시**:
 ```bash
 # MySQL 접속
 mysql -u root -p
@@ -35,6 +51,8 @@ mysql -u root -p
 source C:/Users/USER/IdeaProjects/wild-learning-db/week1/setup.sql
 source C:/Users/USER/IdeaProjects/wild-learning-db/week1/practice1-index-performance.sql
 ```
+
+> **참고**: Docker를 사용하면 200만 건의 데이터가 이미 생성되어 있어 바로 실습 가능합니다!
 
 **예상 결과**:
 - 인덱스 없음: 100-500ms (Full Scan)
