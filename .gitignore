@@ -1,5 +1,9 @@
 # IDE - IntelliJ IDEA
 .idea/
+!.idea/dataSources.xml
+!.idea/sqldialects.xml
+!.idea/dataSources/
+.idea/dataSources/*/storage_*
 *.iml
 *.iws
 *.ipr

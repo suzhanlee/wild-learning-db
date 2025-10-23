@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="Wild Learning DB (Docker)">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.49">
+    <root id="1">
+      <ServerVersion>9.5.0</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="wild_learning_db">
+      <Current>1</Current>
+    </schema>
+  </database-model>
+</dataSource>
