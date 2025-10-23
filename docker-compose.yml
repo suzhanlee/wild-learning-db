@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mysql:
     image: mysql:9
@@ -11,7 +9,7 @@ services:
       MYSQL_USER: wilduser
       MYSQL_PASSWORD: wild123!@#
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       # MySQL 설정 파일
       - ./docker/mysql/conf.d:/etc/mysql/conf.d
