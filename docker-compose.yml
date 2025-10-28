@@ -11,41 +11,15 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      # MySQL 설정 파일
-      - ./docker/mysql/conf.d:/etc/mysql/conf.d
       # 초기화 스크립트 (컨테이너 생성 시 자동 실행)
       - ./docker/mysql/initdb:/docker-entrypoint-initdb.d
       # 데이터 영속성
       - mysql_data:/var/lib/mysql
-    networks:
-      - wild-learning-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pwild123!@#"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # 선택사항: phpMyAdmin (GUI로 DB 확인)
-  phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: wild-learning-phpmyadmin
-    restart: unless-stopped
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: wild123!@#
-    ports:
-      - "8080:80"
-    depends_on:
-      - mysql
-    networks:
-      - wild-learning-network
-
 volumes:
   mysql_data:
-    driver: local
-
-networks:
-  wild-learning-network:
-    driver: bridge
